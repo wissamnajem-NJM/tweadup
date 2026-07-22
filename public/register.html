@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S'inscrire — Tweadup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-side">
+      <a href="/" class="logo" style="color:#fff"><span class="logo-mark">🎓</span><span>Twea<em style="color:#fff">dup</em></span></a>
+      <h2 class="mt-3">Crée ton compte en 1 minute</h2>
+      <p style="opacity:.9">Ton profil étudiant est généré automatiquement. Il ne te reste plus qu'à demander ta première formation.</p>
+      <ul>
+        <li>✅ Compte créé instantanément</li>
+        <li>✅ Profil étudiant automatique</li>
+        <li>✅ Catalogue de 30 formations</li>
+        <li>✅ Certificats vérifiables</li>
+      </ul>
+    </div>
+
+    <div class="auth-form-side">
+      <div class="auth-box">
+        <div class="between">
+          <a href="/" class="muted">← Retour à l'accueil</a>
+          <button class="icon-btn" onclick="toggleTheme()" aria-label="Thème"><span data-theme-icon>🌙</span></button>
+        </div>
+        <h1>Inscription</h1>
+        <p class="muted mb-3">Remplis le formulaire pour rejoindre Tweadup.</p>
+
+        <div id="auth-error"></div>
+
+        <form id="register-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nom">Nom</label>
+              <input id="nom" required placeholder="Dupont" autocomplete="family-name">
+            </div>
+            <div class="form-group">
+              <label for="prenom">Prénom</label>
+              <input id="prenom" required placeholder="Marie" autocomplete="given-name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Adresse email</label>
+            <input id="email" type="email" required placeholder="ton@email.com" autocomplete="email">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="telephone">Téléphone</label>
+              <input id="telephone" type="tel" placeholder="+33 6 12 34 56 78" autocomplete="tel">
+            </div>
+            <div class="form-group">
+              <label for="pays">Pays</label>
+              <input id="pays" placeholder="France" autocomplete="country-name">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">Mot de passe</label>
+              <input id="password" type="password" required minlength="6" placeholder="6 caractères minimum" autocomplete="new-password">
+            </div>
+            <div class="form-group">
+              <label for="confirm">Confirmation</label>
+              <input id="confirm" type="password" required placeholder="Retape le mot de passe" autocomplete="new-password">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="submit-btn">Créer mon compte</button>
+        </form>
+
+        <p class="text-center mt-3 muted">
+          Déjà un compte ? <a href="/login.html"><strong>Connecte-toi</strong></a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script>
+    (function () {
+      const u = TweaAuth.user;
+      if (u && TweaAuth.token) {
+        window.location.href = u.role === 'admin' ? '/admin.html' : '/dashboard.html';
+      }
+      const t = localStorage.getItem('tweadup_theme') || 'light';
+      document.querySelectorAll('[data-theme-icon]').forEach((el) => { el.textContent = t === 'dark' ? '☀️' : '🌙'; });
+    })();
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const errBox = document.getElementById('auth-error');
+      errBox.innerHTML = '';
+
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm').value;
+      if (password !== confirm) {
+        errBox.innerHTML = '<div class="form-error">❌ Les mots de passe ne correspondent pas.</div>';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Création du compte…';
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nom: document.getElementById('nom').value,
+            prenom: document.getElementById('prenom').value,
+            email: document.getElementById('email').value,
+            telephone: document.getElementById('telephone').value,
+            pays: document.getElementById('pays').value,
+            password,
+            confirmPassword: confirm
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Inscription impossible.');
+        TweaAuth.save(data.token, data.user);
+        window.location.href = '/dashboard.html';
+      } catch (err) {
+        errBox.innerHTML = `<div class="form-error">❌ ${esc(err.message)}</div>`;
+        btn.disabled = false;
+        btn.textContent = 'Créer mon compte';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "tweadup",
+  "version": "1.0.0",
+  "description": "Tweadup — Plateforme e-learning professionnelle (HTML/CSS/JS + Node.js/Express + Neon PostgreSQL + Vercel)",
+  "main": "api/index.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "setup-db": "node scripts/initDb.js && node scripts/seed.js",
+    "init-db": "node scripts/initDb.js",
+    "seed": "node scripts/seed.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.12.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon espace — Tweadup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+<body>
+  <div class="dash">
+    <!-- ======================= SIDEBAR ======================= -->
+    <aside class="sidebar" id="sidebar">
+      <a href="/" class="logo"><span class="logo-mark">🎓</span><span>Twea<em>dup</em></span></a>
+      <button class="side-link active" data-section="formations">📚 <span>Mes formations</span></button>
+      <button class="side-link" data-section="catalogue">🗂️ <span>Catalogue</span></button>
+      <button class="side-link" data-section="certificats">🎓 <span>Mes certificats</span></button>
+      <button class="side-link" data-section="demandes">📨 <span>Mes demandes</span></button>
+      <button class="side-link" data-section="notifications">🔔 <span>Notifications</span><span class="notif-count hidden" id="notif-count"></span></button>
+      <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;padding-top:16px">
+        <button class="side-link" onclick="toggleTheme()">🌓 <span>Changer de thème</span></button>
+        <button class="side-link" onclick="logout()">🚪 <span>Déconnexion</span></button>
+      </div>
+    </aside>
+
+    <!-- ========================= MAIN ========================= -->
+    <main class="dash-main">
+      <div class="dash-topbar">
+        <div class="flex">
+          <button class="icon-btn burger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+          <h1 id="page-title">Mes formations</h1>
+        </div>
+        <div class="user-chip">
+          <div class="avatar" id="user-initials">?</div>
+          <div>
+            <strong id="user-name">—</strong><br>
+            <span class="muted" style="font-size:.78rem">Étudiant</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="content"><div class="spinner"></div></div>
+    </main>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cours — Tweadup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+<body>
+  <div class="container" style="max-width:900px;padding-top:28px;padding-bottom:80px">
+    <div class="between mb-3">
+      <a href="#" id="back-link" class="muted">← Retour à la formation</a>
+      <div class="flex">
+        <button class="icon-btn" onclick="toggleTheme()" aria-label="Thème"><span data-theme-icon>🌙</span></button>
+        <button class="btn btn-ghost btn-sm" onclick="logout()">Déconnexion</button>
+      </div>
+    </div>
+
+    <div id="content"><div class="spinner"></div></div>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/cours.js"></script>
+</body>
+</html>

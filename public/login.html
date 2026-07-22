@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Se connecter — Tweadup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-side">
+      <a href="/" class="logo" style="color:#fff"><span class="logo-mark">🎓</span><span>Twea<em style="color:#fff">dup</em></span></a>
+      <h2 class="mt-3">Bon retour parmi nous !</h2>
+      <p style="opacity:.9">Connecte-toi pour reprendre ta progression exactement là où tu l'avais laissée.</p>
+      <ul>
+        <li>📚 Reprends tes cours en un clic</li>
+        <li>🧠 Passe tes quiz et débloque la suite</li>
+        <li>🎓 Télécharge tes certificats</li>
+        <li>🔔 Consulte tes notifications</li>
+      </ul>
+    </div>
+
+    <div class="auth-form-side">
+      <div class="auth-box">
+        <div class="between">
+          <a href="/" class="muted">← Retour à l'accueil</a>
+          <button class="icon-btn" onclick="toggleTheme()" aria-label="Thème"><span data-theme-icon>🌙</span></button>
+        </div>
+        <h1>Connexion</h1>
+        <p class="muted mb-3">Accède à ton espace étudiant ou administrateur.</p>
+
+        <div id="auth-error"></div>
+
+        <form id="login-form">
+          <div class="form-group">
+            <label for="email">Adresse email</label>
+            <input id="email" type="email" required placeholder="ton@email.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input id="password" type="password" required placeholder="••••••••" autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="submit-btn">Se connecter</button>
+        </form>
+
+        <p class="text-center mt-3 muted">
+          Pas encore de compte ? <a href="/register.html"><strong>Crée-le ici</strong></a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script>
+    // Déjà connecté ? Redirection directe selon le rôle
+    (function () {
+      const u = TweaAuth.user;
+      if (u && TweaAuth.token) {
+        window.location.href = u.role === 'admin' ? '/admin.html' : '/dashboard.html';
+      }
+      const t = localStorage.getItem('tweadup_theme') || 'light';
+      document.querySelectorAll('[data-theme-icon]').forEach((el) => { el.textContent = t === 'dark' ? '☀️' : '🌙'; });
+    })();
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const errBox = document.getElementById('auth-error');
+      errBox.innerHTML = '';
+      btn.disabled = true;
+      btn.textContent = 'Connexion…';
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Connexion impossible.');
+        TweaAuth.save(data.token, data.user);
+        // Redirection automatique selon le rôle
+        window.location.href = data.user.role === 'admin' ? '/admin.html' : '/dashboard.html';
+      } catch (err) {
+        errBox.innerHTML = `<div class="form-error">❌ ${esc(err.message)}</div>`;
+        btn.disabled = false;
+        btn.textContent = 'Se connecter';
+      }
+    });
+  </script>
+</body>
+</html>

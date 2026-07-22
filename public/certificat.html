@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificat — Tweadup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <div class="cert-wrap">
+    <div class="between no-print" style="width:100%;max-width:980px">
+      <a href="/dashboard.html" class="muted">← Retour à mon espace</a>
+      <div class="flex">
+        <button class="btn btn-primary btn-sm" onclick="downloadPDF()">⬇ Télécharger en PDF</button>
+        <button class="btn btn-outline btn-sm" onclick="window.print()">🖨 Imprimer</button>
+      </div>
+    </div>
+    <div id="content" style="width:100%;display:flex;justify-content:center"><div class="spinner"></div></div>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/certificat.js"></script>
+</body>
+</html>

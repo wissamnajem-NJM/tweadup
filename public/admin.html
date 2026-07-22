@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administration — Tweadup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="dash">
+    <aside class="sidebar" id="sidebar">
+      <a href="/" class="logo"><span class="logo-mark">🎓</span><span>Twea<em>dup</em></span></a>
+      <button class="side-link active" data-section="dashboard">📊 <span>Tableau de bord</span></button>
+      <button class="side-link" data-section="etudiants">👨‍🎓 <span>Étudiants</span></button>
+      <button class="side-link" data-section="demandes">📨 <span>Demandes</span><span class="notif-count hidden" id="demande-count"></span></button>
+      <button class="side-link" data-section="certificats">🎓 <span>Certificats</span></button>
+      <button class="side-link" data-section="formations">📚 <span>Formations</span></button>
+      <button class="side-link" data-section="progression">📈 <span>Progression</span></button>
+      <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;padding-top:16px">
+        <button class="side-link" onclick="toggleTheme()">🌓 <span>Changer de thème</span></button>
+        <button class="side-link" onclick="logout()">🚪 <span>Déconnexion</span></button>
+      </div>
+    </aside>
+
+    <main class="dash-main">
+      <div class="dash-topbar">
+        <div class="flex">
+          <button class="icon-btn burger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+          <h1 id="page-title">Tableau de bord</h1>
+        </div>
+        <div class="user-chip">
+          <div class="avatar">🛡️</div>
+          <div>
+            <strong id="user-name">Admin</strong><br>
+            <span class="muted" style="font-size:.78rem">Administrateur</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="content"><div class="spinner"></div></div>
+    </main>
+  </div>
+
+  <div id="modal-root"></div>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

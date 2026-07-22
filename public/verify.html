@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vérifier un certificat — Tweadup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="logo"><span class="logo-mark">🎓</span><span>Twea<em>dup</em></span></a>
+      <div class="nav-actions">
+        <button class="icon-btn" onclick="toggleTheme()" aria-label="Thème"><span data-theme-icon>🌙</span></button>
+        <a class="btn btn-outline btn-sm" href="/login.html">Se connecter</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" style="max-width:640px;padding-top:140px;padding-bottom:80px">
+    <div class="card card-pad">
+      <h2 class="text-center">🔍 Vérification de certificat</h2>
+      <p class="muted text-center mt-1 mb-3">Saisis le code de vérification présent sur le certificat (ou scanne son QR code).</p>
+      <form id="verify-form" class="flex">
+        <input id="code" placeholder="Code de vérification (ex : 9f2c4a…)" required
+          style="flex:1;padding:13px 16px;background:var(--bg-soft);border:2px solid var(--card-border);border-radius:12px;color:var(--text);outline:none">
+        <button class="btn btn-primary" type="submit">Vérifier</button>
+      </form>
+      <div id="result" class="mt-3"></div>
+    </div>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script>
+    (function () {
+      const t = localStorage.getItem('tweadup_theme') || 'light';
+      document.querySelectorAll('[data-theme-icon]').forEach((el) => { el.textContent = t === 'dark' ? '☀️' : '🌙'; });
+      const code = new URLSearchParams(window.location.search).get('code');
+      if (code) {
+        document.getElementById('code').value = code;
+        verify(code);
+      }
+    })();
+
+    document.getElementById('verify-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      verify(document.getElementById('code').value.trim());
+    });
+
+    async function verify(code) {
+      const box = document.getElementById('result');
+      if (!code) return;
+      box.innerHTML = '<div class="spinner"></div>';
+      try {
+        const r = await fetch(`/api/public/verify/${encodeURIComponent(code)}`);
+        const data = await r.json();
+        if (!r.ok || !data.valide) throw new Error(data.message || 'Certificat invalide.');
+        const c = data.certificat;
+        box.innerHTML = `
+          <div class="card card-pad" style="border:2px solid var(--success);text-align:center">
+            <div style="font-size:3rem">✅</div>
+            <h3 style="color:var(--success)">Certificat authentique</h3>
+            <p class="mt-2">
+              <strong>${esc(c.prenom)} ${esc(c.nom)}</strong><br>
+              a terminé avec succès la formation<br>
+              <strong>« ${esc(c.formation)} »</strong>
+            </p>
+            <p class="muted mt-2" style="font-size:.85rem">
+              Certificat N° ${esc(c.numero)}<br>Délivré le ${formatDate(c.date_delivrance)}
+            </p>
+          </div>`;
+      } catch (err) {
+        box.innerHTML = `
+          <div class="card card-pad" style="border:2px solid var(--danger);text-align:center">
+            <div style="font-size:3rem">❌</div>
+            <h3 style="color:var(--danger)">Certificat invalide</h3>
+            <p class="muted mt-1">${esc(err.message)}</p>
+          </div>`;
+      }
+    }
+  </script>
+</body>
+</html>
